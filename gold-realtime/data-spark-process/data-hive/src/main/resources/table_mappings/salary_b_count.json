@@ -1,0 +1,22 @@
+{
+  "taskName": "salary_b_count",
+  "tableName": "salary_b_count",
+  "columns": [
+    {
+      "name": "count",
+      "type": "long"
+    },
+    {
+      "name": "type",
+      "type": "string"
+    }
+  ],
+  "steps": [
+    {
+      "sql": "SELECT COUNT(*) as count,'total' as type FROM (SELECT DISTINCT emp_no FROM foxconn_b_group_salary) t",
+      "tempView": "t",
+      "macros": {}
+    }
+  ],
+  "version": "1.0"
+}

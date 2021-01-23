@@ -1,0 +1,80 @@
+package com.platform.cache.impl;
+
+import com.platform.bean.entity.system.Cfg;
+import com.platform.cache.BaseCache;
+import com.platform.cache.CacheDao;
+import com.platform.cache.ConfigCache;
+import com.platform.dao.system.CfgRepository;
+import com.platform.utils.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+/**
+ * 全局参数缓存实现类
+ *
+ * @author wlhbdp
+ * @version 2020/12/20 0020
+ */
+@Service
+public class ConfigCacheImpl extends BaseCache implements ConfigCache {
+    private static  final Logger logger = LoggerFactory.getLogger(ConfigCacheImpl.class);
+    @Autowired
+    private CfgRepository cfgRepository;
+    @Autowired
+    private CacheDao cacheDao;
+
+    @Override
+    public String get(String key) {
+        return (String) cacheDao.hget(CacheDao.CONSTANT,key);
+    }
+
+    @Override
+    public String get(String key, boolean local) {
+        String ret = null;
+        if(local) {
+             ret = get(key);
+        }else{
+            ret = cfgRepository.findByCfgName(key).getCfgValue();
+            set(key,ret);
+        }
+        return ret;
+    }
+
+    @Override
+    public String get(String key, String def) {
+        String ret =  get(key);
+        if(StringUtil.isEmpty(ret)){
+            return ret;
+        }
+        return ret;
+    }
+
+
+    @Override
+    public void set(String key, Object val) {
+        cacheDao.hset(CacheDao.CONSTANT,key,val);
+    }
+
+    @Override
+    public void del(String key, String val) {
+        cacheDao.hdel(CacheDao.CONSTANT,val);
+    }
+
+    @Override
+    public void cache() {
+        super.cache();
+        logger.info("reset config cache");
+        List<Cfg> list = cfgRepository.findAll();
+        if (list != null && !list.isEmpty()) {
+            for (Cfg cfg : list) {
+                if (StringUtil.isNotEmpty(cfg.getCfgName()) && StringUtil.isNotEmpty(cfg.getCfgValue())) {
+                    set(cfg.getCfgName(),cfg.getCfgValue());
+                }
+            }
+        }
+    }
+}

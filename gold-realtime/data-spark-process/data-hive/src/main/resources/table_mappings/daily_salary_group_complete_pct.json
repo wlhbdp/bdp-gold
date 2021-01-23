@@ -1,0 +1,39 @@
+{
+  "taskName": "daily_salary_group_complete_pct",
+  "tableName": "daily_salary_group_complete_pct",
+  "columns": [
+    {
+      "name": "sjtname",
+      "type": "string"
+    },
+    {
+      "name": "active_amt",
+      "type": "long"
+    },
+    {
+      "name": "biz_date",
+      "type": "string"
+    },
+    {
+      "name": "begin_time",
+      "type": "date"
+    },
+    {
+      "name": "end_time",
+      "type": "date"
+    }
+  ],
+  "steps": [
+    {
+      "sql":"select count(distinct a.employeenum) as active_amt, a.sjtname, #{biz_date} as biz_date,#{begin_time} as begin_time,#{end_time} as end_time from (select employeenum, quotastatus, rank() over (partition by employeenum order by logts desc) as num, sjtname from mysql_hxdb_employee_quota_info where quotastatus != 6) a where a.num = 1 and a.quotastatus = 2 group by sjtname",
+      "tempView": "",
+      "macros": {
+        "#{biz_date}": "",
+        "${endDateTime}":"",
+        "#{begin_time}": "",
+        "#{end_time}": ""
+      }
+    }
+  ],
+  "version": "1.0"
+}

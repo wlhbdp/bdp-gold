@@ -1,0 +1,43 @@
+{
+  "taskName": "daily_salary_fbd_apply",
+  "tableName": "daily_salary_fbd_apply",
+  "columns": [
+    {
+      "name": "fbd_register_amount",
+      "type": "long"
+    },
+    {
+      "name": "fbd_approved_amount",
+      "type": "long"
+    },
+    {
+      "name": "biz_date",
+      "type": "string"
+    },
+    {
+      "name": "begin_time",
+      "type": "date"
+    },
+    {
+      "name": "end_time",
+      "type": "date"
+    }
+  ],
+  "steps": [
+    {
+      "sql": "select distinct eqi.customerid from mysql_hxdb_employee_quota_info eqi,mysql_hxdb_employee_company_record ec where eqi.certid=ec.certid  and ec.newsjtname in ('A','BD','C','E','FG','H','J','K','L','S','CAA','B','D')",
+      "tempView": "t",
+      "macros": {}
+    },
+    {
+      "sql":"select count(*) as fbd_register_amount,sum(case when ba.approvestatus='03' then 1 end) as fbd_approved_amount ,#{biz_date} as biz_date, #{begin_time} as begin_time, #{end_time} as end_time from mysql_hxdb_business_apply ba,t where ba.customerid=t.customerid and ba.businesstype='6'",
+      "tempView": "fa",
+      "macros": {
+        "#{biz_date}": "",
+        "#{begin_time}": "",
+        "#{end_time}": ""
+      }
+    }
+  ],
+  "version": "1.0"
+}

@@ -1,0 +1,49 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "com.fujfu.canal.properties.CanalProperties",
+      "name": "fox.canal",
+      "type": "com.fujfu.canal.properties.CanalProperties"
+    }
+  ],
+  "properties": [
+    {
+      "sourceType": "com.fujfu.canal.properties.CanalProperties",
+      "defaultValue": false,
+      "name": "fox.canal.flat-message",
+      "description": "是否为json格式\n 如果设置为false,对应MQ收到的消息为protobuf格式\n 需要通过CanalMessageDeserializer进行解码",
+      "type": "java.lang.Boolean"
+    },
+    {
+      "sourceType": "com.fujfu.canal.properties.CanalProperties",
+      "name": "fox.canal.group-id",
+      "description": "mq consumer groupId",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.fujfu.canal.properties.CanalProperties",
+      "name": "fox.canal.mq-servers",
+      "description": "mq server",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.fujfu.canal.properties.CanalProperties",
+      "name": "fox.canal.partition",
+      "description": "mq partition",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "com.fujfu.canal.properties.CanalProperties",
+      "name": "fox.canal.topic",
+      "description": "mq topic",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.fujfu.canal.properties.CanalProperties",
+      "name": "fox.canal.white-list",
+      "description": "白名单列表",
+      "type": "java.lang.String"
+    }
+  ]
+}

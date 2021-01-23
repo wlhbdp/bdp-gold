@@ -1,0 +1,53 @@
+{
+  "taskName": "daily_salary_total_consume_amt",
+  "tableName": "daily_salary_total_consume_amt",
+  "columns": [
+    {
+      "name": "sjtname",
+      "type": "string"
+    },
+    {
+      "name": "total_consume_amt",
+      "type": "double"
+    },
+    {
+      "name": "biz_date",
+      "type": "string"
+    },
+    {
+      "name": "begin_time",
+      "type": "date"
+    },
+    {
+      "name": "end_time",
+      "type": "date"
+    }
+  ],
+  "steps": [
+    {
+      "sql":"select bct2.businesstype,bct2.serialno from mysql_hxdb_business_contract bct2,(select bct.serialno,max(bct.logts) logts from mysql_hxdb_business_contract bct group by serialno) bct1 where bct2.serialno = bct1.serialno and bct2.logts = bct1.logts",
+      "tempView": "bc",
+      "macros": {}
+    },
+    {
+      "sql":"select bpt2.serialno,bpt2.contractserialno,bpt2.putoutstatus from mysql_hxdb_business_putout bpt2,(select bpt.serialno,max(bpt.logts) logts from mysql_hxdb_business_putout bpt  group by serialno) bpt1 where bpt2.serialno = bpt1.serialno and bpt2.logts = bpt1.logts",
+      "tempView": "bp",
+      "macros": {}
+    },
+    {
+      "sql":"select distinct bc.serialno,(case when eg.sjtname='FG' then'FII' else  eg.sjtname end) sjtname,eg.currentusedquota from mysql_hxdb_employee_quota_uselog eg, bc,bp,mysql_hxdb_code_library c where eg.contractno=bc.serialno and bc.businesstype='9' and bc.serialno=bp.contractserialno and bp.putoutstatus not in('06','07','10') and c.codeno='PutOutStatus' and c.itemno= bp.putoutstatus and eg.sjtname not in('H','J')",
+      "tempView": "consumption_log",
+      "macros": {}
+    },
+    {
+      "sql":"select cl.sjtname as sjtname,sum(cl.currentusedquota) as total_consume_amt,#{biz_date} as biz_date,#{begin_time} as begin_time,#{end_time} as end_time from consumption_log cl group by cl.sjtname",
+      "tempView": "",
+      "macros": {
+        "#{biz_date}": "",
+        "#{begin_time}": "",
+        "#{end_time}": ""
+      }
+    }
+  ],
+  "version": "1.0"
+}

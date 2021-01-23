@@ -1,0 +1,12 @@
+{
+  "codeConfig": {
+    "type": "com.platform.code.CodeConfig",
+    "fields": {
+      entityModel: "shop-core",
+      daoModel: "shop-core",
+      serviceModel: "shop-core",
+      controllerModel: "shop-admin-api",
+      viewModel: "shop-admin"
+    }
+  }
+}

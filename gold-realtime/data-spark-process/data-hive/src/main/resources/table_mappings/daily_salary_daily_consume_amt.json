@@ -1,0 +1,39 @@
+{
+  "taskName": "daily_salary_daily_consume_amt",
+  "tableName": "daily_salary_daily_consume_amt",
+  "columns": [
+    {
+      "name": "sjtname",
+      "type": "string"
+    },
+    {
+      "name": "daily_consume_amt",
+      "type": "double"
+    },
+    {
+      "name": "biz_date",
+      "type": "string"
+    },
+    {
+      "name": "begin_time",
+      "type": "date"
+    },
+    {
+      "name": "end_time",
+      "type": "date"
+    }
+  ],
+  "steps": [
+    {
+      "sql":"select sjtname, sum(currentusedquota) as daily_consume_amt,#{biz_date} as biz_date,#{begin_time} as begin_time,#{end_time} as end_time from mysql_hxdb_employee_quota_uselog where to_date(inputtime) = from_unixtime(${endDateTime}/1000, 'yyyy-MM-dd') group by sjtname",
+      "tempView": "",
+      "macros": {
+        "#{biz_date}": "",
+        "${endDateTime}":"",
+        "#{begin_time}": "",
+        "#{end_time}": ""
+      }
+    }
+  ],
+  "version": "1.0"
+}

@@ -1,0 +1,48 @@
+{
+  "taskName": "daily_salary_activate",
+  "tableName": "daily_salary_activate",
+  "columns": [
+    {
+      "name": "total_register_amount",
+      "type": "long"
+    },
+    {
+      "name": "activate_salary_amount",
+      "type": "long"
+    },
+    {
+      "name": "biz_date",
+      "type": "string"
+    },
+    {
+      "name": "begin_time",
+      "type": "date"
+    },
+    {
+      "name": "end_time",
+      "type": "date"
+    }
+  ],
+  "steps": [
+    {
+      "sql": "SELECT eqi.certid certid,max(eqi.logts) as logts from mysql_hxdb_employee_quota_info eqi where eqi.quotastatus!='6' GROUP BY eqi.certid",
+      "tempView": "m",
+      "macros": {}
+    },
+    {
+      "sql": "select eqi1.certid,eqi1.quotastatus from mysql_hxdb_employee_quota_info eqi1, m where m.certid=eqi1.certid and m.logts=eqi1.logts",
+      "tempView": "t",
+      "macros": {}
+    },
+    {
+      "sql":"SELECT count(*) as total_register_amount,sum(case when t.quotastatus=2 then 1 end) as activate_salary_amount,#{biz_date} as biz_date, #{begin_time} as begin_time, #{end_time} as end_time from t",
+      "tempView": "fa",
+      "macros": {
+        "#{biz_date}": "",
+        "#{begin_time}": "",
+        "#{end_time}": ""
+      }
+    }
+  ],
+  "version": "1.0"
+}

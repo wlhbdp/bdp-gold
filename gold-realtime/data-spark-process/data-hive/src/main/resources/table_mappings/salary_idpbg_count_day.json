@@ -1,0 +1,24 @@
+{
+  "taskName": "salary_idpbg_count_day",
+  "tableName": "salary_idpbg_count",
+  "columns": [
+    {
+      "name": "count",
+      "type": "long"
+    },
+    {
+      "name": "type",
+      "type": "string"
+    }
+  ],
+  "steps": [
+    {
+      "sql": "SELECT count(*) as count,'day' as type FROM foxconn_idpgidpbg_group_salary WHERE unix_timestamp(create_time,'yyyyMMddHHmmss')>=unix_timestamp('#{biz_date}', 'yyyyMMdd')",
+      "tempView": "m",
+      "macros": {
+        "#{biz_date}": ""
+      }
+    }
+  ],
+  "version": "1.0"
+}

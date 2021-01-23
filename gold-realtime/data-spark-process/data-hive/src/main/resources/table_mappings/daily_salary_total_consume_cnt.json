@@ -1,0 +1,38 @@
+{
+  "taskName": "daily_salary_total_consume_cnt",
+  "tableName": "daily_salary_total_consume_cnt",
+  "columns": [
+    {
+      "name": "sjtname",
+      "type": "string"
+    },
+    {
+      "name": "total_consume_cnt",
+      "type": "long"
+    },
+    {
+      "name": "biz_date",
+      "type": "string"
+    },
+    {
+      "name": "begin_time",
+      "type": "date"
+    },
+    {
+      "name": "end_time",
+      "type": "date"
+    }
+  ],
+  "steps": [
+    {
+      "sql":"select sjtname, count(currentusedquota) as total_consume_cnt, #{biz_date} as biz_date,#{begin_time} as begin_time,#{end_time} as end_time from mysql_hxdb_employee_quota_uselog group by sjtname",
+      "tempView": "",
+      "macros": {
+        "#{biz_date}": "",
+        "#{begin_time}": "",
+        "#{end_time}": ""
+      }
+    }
+  ],
+  "version": "1.0"
+}

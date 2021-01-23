@@ -1,0 +1,124 @@
+{
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://example.com/root.json",
+  "type": "object",
+  "title": "The Root Schema",
+  "required": [
+    "taskName",
+    "tableName",
+    "columns",
+    "steps",
+    "version"
+  ],
+  "properties": {
+    "taskName": {
+      "$id": "#/properties/taskName",
+      "type": "string",
+      "title": "The Taskname Schema",
+      "default": "",
+      "examples": [
+        "daily_salary_activate"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "tableName": {
+      "$id": "#/properties/tableName",
+      "type": "string",
+      "title": "The Tablename Schema",
+      "default": "",
+      "examples": [
+        "daily_salary_activate"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "columns": {
+      "$id": "#/properties/columns",
+      "type": "array",
+      "title": "The Columns Schema",
+      "items": {
+        "$id": "#/properties/columns/items",
+        "type": "object",
+        "title": "The Items Schema",
+        "required": [
+          "name",
+          "type"
+        ],
+        "properties": {
+          "name": {
+            "$id": "#/properties/columns/items/properties/name",
+            "type": "string",
+            "title": "The Name Schema",
+            "default": "",
+            "examples": [
+              "total_register_amount"
+            ],
+            "pattern": "^(.*)$"
+          },
+          "type": {
+            "$id": "#/properties/columns/items/properties/type",
+            "type": "string",
+            "title": "The Type Schema",
+            "default": "",
+            "examples": [
+              "long"
+            ],
+            "pattern": "^(.*)$"
+          }
+        }
+      }
+    },
+    "steps": {
+      "$id": "#/properties/steps",
+      "type": "array",
+      "title": "The Steps Schema",
+      "items": {
+        "$id": "#/properties/steps/items",
+        "type": "object",
+        "title": "The Items Schema",
+        "required": [
+          "sql",
+          "tempView",
+          "macros"
+        ],
+        "properties": {
+          "sql": {
+            "$id": "#/properties/steps/items/properties/sql",
+            "type": "string",
+            "title": "The Sql Schema",
+            "default": "",
+            "examples": [
+              "SELECT eqi.certid certid,max(eqi.logts) as logts from mysql_hxdb_employee_quota_info eqi where eqi.quotastatus!='6' GROUP BY eqi.certid"
+            ],
+            "pattern": "^(.*)$"
+          },
+          "tempView": {
+            "$id": "#/properties/steps/items/properties/tempView",
+            "type": "string",
+            "title": "The Tempview Schema",
+            "default": "",
+            "examples": [
+              "m"
+            ],
+            "pattern": "^(.*)$"
+          },
+          "macros": {
+            "$id": "#/properties/steps/items/properties/macros",
+            "type": "object",
+            "title": "The Macros Schema"
+          }
+        }
+      }
+    },
+    "version": {
+      "$id": "#/properties/version",
+      "type": "string",
+      "title": "The Version Schema",
+      "default": "",
+      "examples": [
+        "1.0"
+      ],
+      "pattern": "^(.*)$"
+    }
+  }
+}

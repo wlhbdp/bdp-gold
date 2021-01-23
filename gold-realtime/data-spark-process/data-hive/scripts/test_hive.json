@@ -1,0 +1,42 @@
+{
+  "taskName":"test_hive",
+  "dataSource": {
+    "sourceName":"Hive",
+    "dbName":"fox_data"
+  },
+  "targetDest": {
+    "targetName": "Hive",
+    "dbName":"`fox_data`",
+    "tableName":"test02",
+    "columns": [
+      {
+        "fieldName":"sjt_name",
+        "fieldType":"string"
+      },
+      {
+        "fieldName":"class_name",
+        "fieldType":"string"
+      },
+      {
+        "fieldName":"fac_name",
+        "fieldType":"string"
+      }
+    ]
+  },
+  "steps":[
+    {
+      "sql":"select sjtname as sjt_name,classname as class_name,facname as fac_name,#{partition_month} as partition_month from fox_data.mysql_hxdb_employee_info where partition_month='2019-03' group by sjtname,classname,facname",
+      "tempView":"t1",
+      "macros": {
+        "#{partition_month}": ""
+      }
+    }
+  ],
+  "extra": {
+    "partitionFieldName": "partition_month",
+    "partitionStrategy": "month",
+    "saveMode": "append",
+    "saveFormat": "hive"
+  },
+  "version":"2.0"
+}

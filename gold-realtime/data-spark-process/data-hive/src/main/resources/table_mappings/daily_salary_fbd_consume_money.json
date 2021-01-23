@@ -1,0 +1,63 @@
+{
+  "taskName": "daily_salary_fbd_consume_money",
+  "tableName": "fbd_consume_money",
+  "columns": [
+    {
+      "name": "amt_type",
+      "type": "string"
+    },
+    {
+      "name": "type_name",
+      "type": "string"
+    },
+    {
+      "name": "amount",
+      "type": "double"
+    },
+    {
+      "name": "biz_date",
+      "type": "string"
+    },
+    {
+      "name": "biz_hour",
+      "type": "int"
+    }
+  ],
+  "steps": [
+    {
+      "sql": "select distinct bcc.serialno,bcc.applyserialno,bcc.businesstype from mysql_hxdb_business_contract bcc,(select serialno,max(logts) logts from mysql_hxdb_business_contract group by serialno) unique where bcc.serialno = unique.serialno and bcc.logts = unique.logts  and bcc.dmltype in ('INSERT','UPDATE')",
+      "tempView": "bc",
+      "macros": {}
+    },
+    {
+      "sql": "SELECT DISTINCT bp1.contractserialno,bp1.putoutstatus  from mysql_hxdb_business_putout bp1,(select contractserialno,max(logts) logts from mysql_hxdb_business_putout group by contractserialno) bp2 where bp1.contractserialno = bp2.contractserialno and bp1.logts = bp2.logts and bp1.dmltype in ('INSERT','UPDATE')",
+      "tempView": "bp",
+      "macros": {}
+    },
+    {
+      "sql": "SELECT DISTINCT ba1.serialno,coalesce(ba1.businesssum,0.0) business_sum,(case when ba1.businesstype = '5' then '01' when ba1.businesstype in ('3','4') then '02' else '其他' end) as cnt_type,ba1.businesstype business_type from mysql_hxdb_business_apply ba1,(select serialno,max(logts) logts from mysql_hxdb_business_apply group by serialno) ba2 where ba1.serialno = ba2.serialno and ba1.logts = ba2.logts and regexp_replace(ba1.occurdate,'\\\\/','') = (case when #{biz_hour} = -1 then #{biz_date}-1 else #{biz_date} end) and ba1.businesstype in ('3','5','4')  and ba1.approvestatus = '03'",
+      "tempView": "ba",
+      "macros": {
+        "#{biz_date}": "",
+        "#{biz_hour}": ""
+      }
+    },
+    {
+      "sql": "select distinct bc.serialno,coalesce(eg.currentusedquota,0.0) current_used_quota  from (SELECT distinct  eg1.contractno,eg1.sjtname,eg1.currentusedquota from mysql_hxdb_employee_quota_uselog eg1,(select contractno,max(logts) logts from mysql_hxdb_employee_quota_uselog group by contractno) eg2 where eg1.contractno = eg2.contractno and eg1.logts = eg2.logts and regexp_replace(substr(eg1.inputtime,1,10),'\\\\-','')= (case when #{biz_hour} = -1 then #{biz_date}-1 else #{biz_date} end) and eg1.sjtname not in('H','J') )eg,bc,bp,mysql_hxdb_code_library c  where eg.contractno=bc.serialno and bc.businesstype='9' and bc.serialno=bp.contractserialno and c.codeno='PutOutStatus' and c.itemno=bp.putoutstatus  and bp.putoutstatus not in('06','07','10')",
+      "tempView": "salaryPay",
+      "macros": {
+        "#{biz_date}": "",
+        "#{biz_hour}": ""
+      }
+    },
+    {
+      "sql":"select ba.cnt_type amt_type,(case when ba.cnt_type = '01' then '提现' else '信用支付' end) as type_name, sum(case when ba.business_type = '5' then ba.business_sum when ba.business_type in ('3','4')  then (ba.business_sum) else 0.0 end) amount,(case when #{biz_hour} = -1 then #{biz_date}-1 else #{biz_date} end) as biz_date,(case when #{biz_hour} = -1 then 23 else #{biz_hour}  end) as biz_hour from  ba,bc,bp where ba.serialno = bc.applyserialno and bc.serialno = bp.contractserialno and bp.putoutstatus not in ('06', '07', '10')  group by ba.cnt_type   union all   SELECT  '03' as amt_type,'薪资支付' as type_name,  sum(salaryPay.current_used_quota) amount,(case when #{biz_hour} = -1 then #{biz_date}-1 else #{biz_date} end) as biz_date,(case when #{biz_hour} = -1 then 23 else #{biz_hour}  end) as biz_hour from    salaryPay",
+      "tempView": "daily_salary_fbd_consume_money",
+      "macros": {
+        "#{biz_date}": "",
+        "#{biz_hour}": ""
+      }
+    }
+  ],
+  "version": "1.0"
+}
