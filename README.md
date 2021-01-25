@@ -1,5 +1,5 @@
 # 总项目 https://github.com/wlhbdp/bdp-ecology
-# 2、金铺数据分析 bdp-gold
+# 2、大数据生态解决方案金铺数据分析 bdp-gold
 
 2.1 个性化推荐系统 gold-recommender
 
@@ -23,7 +23,7 @@
         android开发埋点：https://github.com/foolchen/AndroidTracker
        
         
-技术交流:
+13 技术交流:
     
     微信交流群：https://my-macro-oss.oss-cn-shenzhen.aliyuncs.com/mall/images/design/wechat_group/bdp_%E4%BA%A4%E6%B5%81%E7%BE%A4.jpg
     个人微信：https://my-macro-oss.oss-cn-shenzhen.aliyuncs.com/mall/images/wechat/%E5%BE%AE%E4%BF%A1.jpg
